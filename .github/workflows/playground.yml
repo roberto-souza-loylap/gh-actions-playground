@@ -12,10 +12,8 @@ jobs:
       - name: showGithubContextObject
         run: |
           echo '${{toJson(github)}}'
-      - name: showSecrets
-        run: |
-          echo '${{toJson(secrets)}}'
-      - name: getUserObject
+      - id: getUserObject
+        name: Get user from gh API
         run: |
           USER_DATA=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}`
           echo "::set-output name=userJson::$USER_DATA"
