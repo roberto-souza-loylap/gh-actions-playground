@@ -15,7 +15,7 @@ jobs:
       - id: getUserPublicEvents
         name: Fetch user's public events page
         run: |
-          USER_EVENTS = `gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
+          USER_EVENTS=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
           echo "::set-output name=userEvents::$USER_EVENTS"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
