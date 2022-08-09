@@ -17,7 +17,7 @@ jobs:
           echo '${{secrets.GITHUB_ACTOR}}'
       - name: showActorUserObject
         run: |
-          USER_DATA=$(gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}
+          USER_DATA=$(gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}})
           echo $USER_DATA
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
