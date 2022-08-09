@@ -15,7 +15,9 @@ jobs:
       - id: getUserPublicEvents
         name: Fetch user's public events page
         run: |
-          USER_EVENTS=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
+          echo 'JSON_RESPONSE<<EOF' >> $USER_EVENTS
+          echo `gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public` >> $USER_EVENTS
+          echo 'EOF' >> $USER_EVENTS
           echo "::set-output name=userEvents::$USER_EVENTS"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -28,5 +30,6 @@ jobs:
           i=0
           while [[-z "$userEmail"] && ["$userEvents[$i]"]]
           do
-            echo $userEvents[$i]['payload']['commits']['author']
+            echo $userEvents[$i].payload.commits.author
+            $i = $i + 1
           done
