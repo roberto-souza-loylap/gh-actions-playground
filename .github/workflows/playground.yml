@@ -21,4 +21,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: showUserObject
         run: |
-          echo '${{toJson(fromJson(steps.getUserObject.userJson))}}'
+          echo '${{toJson(fromJson(steps.getUserObject.outputs.userJson))}}'
