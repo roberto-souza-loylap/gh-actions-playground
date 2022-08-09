@@ -12,13 +12,21 @@ jobs:
       - name: showGithubContextObject
         run: |
           echo '${{toJson(github)}}'
-      - id: getUserObject
-        name: Get user from gh API
+      - id: getUserPublicEvents
+        name: Fetch user's public events page
         run: |
-          USER_DATA=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}`
-          echo "::set-output name=userJson::$USER_DATA"
+          USER_EVENTS=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
+          echo "::set-output name=userEvents::$USER_EVENTS"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: showUserObject
+      - id: getUserNameAndEmail
+        name: Get user config name and email
         run: |
-          echo '${{toJson(fromJson(steps.getUserObject.outputs.userJson))}}'
+          userEvents=${{fromJson(steps.getUserPublicEvents.outputs.userEvents)}}
+          userName=null
+          userEmail=null
+          i=0
+          while [[-z "$userEmail"] && ["$userEvents[$i]"]]
+          do
+            echo $userEvents[$i]['payload']['commits']['author']
+          done
