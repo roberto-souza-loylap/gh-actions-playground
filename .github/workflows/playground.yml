@@ -17,26 +17,7 @@ jobs:
           echo '${{secrets.GITHUB_ACTOR}}'
       - name: showActorUserObject
         run: |
-          gh api \
-          -H "Accept: application/vnd.github+json" \
-          /users/${{github.actor}}
+          userAPIData=${{fromJson(gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}})}}
+          echo '${{toJson(userAPIData)}}'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: showJobContextObject
-        run: |
-          echo '${{toJson(job)}}'
-      - name: showStepsContextObject
-        run: |
-          echo '${{toJson(steps)}}'
-      - name: showRunnerContextObject
-        run: |
-          echo '${{toJson(runner)}}'
-      - name: showStrategyContextObject
-        run: |
-          echo '${{toJson(strategy)}}'
-      - name: showMatrixContextObject
-        run: |
-          echo '${{toJson(matrix)}}'
-      - name: showNeedsContextObject
-        run: |
-          echo '${{toJson(needs)}}'
