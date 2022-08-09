@@ -17,9 +17,10 @@ jobs:
           echo '${{toJson(secrets)}}'
       - name: getUserObject
         run: |
-          echo "USER_DATA=$(gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}})" >> $GITHUB_ENV
+          USER_DATA=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}`
+          echo "::set-output name=userJson::$USER_DATA"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: showUserObject
         run: |
-          echo '${{fromJson(env.USER_DATA)}}'
+          echo '${{toJson(fromJson(steps.getUserObject.userJson))}}'
