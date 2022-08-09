@@ -18,6 +18,6 @@ jobs:
       - name: showActorUserObject
         run: |
           userAPIData=$(gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}
-          echo '${{fromJson(userAPIData)}}'
+          echo '${{fromJson($userAPIData)}}'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
