@@ -26,7 +26,7 @@ jobs:
           userName=null
           userEmail=null
           i=0
-          while [[-z "$userEmail"] && ["$userEvents[$i]"]]
+          while ["$userEvents[$i]"]
           do
             echo $userEvents[$i].payload.commits.author
             $i = $i + 1
