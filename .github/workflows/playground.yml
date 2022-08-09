@@ -1,0 +1,42 @@
+name: Playground
+on:
+  workflow_dispatch:
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  check-gh-objects:
+    runs-on: ubuntu-latest
+    steps:
+      - name: showGithubContextObject
+        run: |
+          echo '${{toJson(github)}}'
+      - name: showGithubActorName
+        run: |
+          echo '${{secrets.GITHUB_ACTOR}}'
+      - name: showActorUserObject
+        run: |
+          gh api \
+          -H "Accept: application/vnd.github+json" \
+          /users/${{github.actor}}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: showJobContextObject
+        run: |
+          echo '${{toJson(job)}}'
+      - name: showStepsContextObject
+        run: |
+          echo '${{toJson(steps)}}'
+      - name: showRunnerContextObject
+        run: |
+          echo '${{toJson(runner)}}'
+      - name: showStrategyContextObject
+        run: |
+          echo '${{toJson(strategy)}}'
+      - name: showMatrixContextObject
+        run: |
+          echo '${{toJson(matrix)}}'
+      - name: showNeedsContextObject
+        run: |
+          echo '${{toJson(needs)}}'
