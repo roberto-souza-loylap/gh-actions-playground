@@ -24,7 +24,7 @@ jobs:
         name: Parse user's events
         run: |
           # echo "::set-output name=userEvents::"$(jq '.' ./user-events.json)
-          echo "::set-output name=userEvents::"$(readarray -t values < <(jq -r '.[]' ./user-events.json))
+          echo "::set-output name=userEvents::"$(readarray -t values < <(jq -r '[]' ./user-events.json))
 
       - id: getUserNameAndEmail
         name: Get user config name and email
