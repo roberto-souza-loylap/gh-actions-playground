@@ -33,6 +33,8 @@ jobs:
           userName=null
           userEmail=null
           echo "$userEvents[0]"
+          echo $userEvents[0]
+          echo ${userEvents[0]}
           i=0
           echo "$userEvents[$i]"
           while [$userEvents[$i]]
