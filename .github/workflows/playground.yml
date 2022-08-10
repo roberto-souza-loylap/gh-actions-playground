@@ -23,12 +23,13 @@ jobs:
       - id: getUserEvents
         name: Parse user's events
         run: |
-          echo "::set-output name=userEvents::"$(jq -r '.' ./user-events.json)
+          # echo "::set-output name=userEvents::"$(jq -r '.' ./user-events.json)
+          echo "::set-output name=userEvents::[{ 'a': 1 }, { 'a': 2 }]"
 
       - id: getUserNameAndEmail
         name: Get user config name and email
         run: |
-          userEvents=${{steps.getUserEvents.outputs.userEvents}}
+          userEvents=${{fromJson(steps.getUserEvents.outputs.userEvents)}}
           userName=null
           userEmail=null
           i=0
