@@ -32,7 +32,9 @@ jobs:
           userEvents=${{fromJson(steps.getUserEvents.outputs.userEvents)}}
           userName=null
           userEmail=null
+          echo "$userEvents[0]"
           i=0
+          echo "$userEvents[$i]"
           while [$userEvents[$i]]
           do
             echo $userEvents[$i].payload.commits.author
