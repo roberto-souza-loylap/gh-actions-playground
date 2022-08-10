@@ -24,13 +24,13 @@ jobs:
         name: Parse user's events
         run: |
           # echo "::set-output name=userEvents::"$(jq '.' ./user-events.json)
-          echo "::set-output name=userEvents::[{'a':1},{'a':2}]"
+          echo "::set-output name=userEvents::"$(readarray -t values < <(jq -r '.[]' ./user-events.json))
 
       - id: getUserNameAndEmail
         name: Get user config name and email
         run: |
-          cat ./user-events.json | jq '.'
-          userEvents=${{fromJson(steps.getUserEvents.outputs.userEvents)}}
+          userEvents=${{steps.getUserEvents.outputs.userEvents}}
+          echo "$userEvents"
           userName=null
           userEmail=null
           echo "$userEvents[0]"
