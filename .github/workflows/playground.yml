@@ -28,7 +28,7 @@ jobs:
       - id: getUserNameAndEmail
         name: Get user config name and email
         run: |
-          userEvents=${{fromJson(steps.getUserEvents.outputs.userEvents)}}
+          userEvents=${{steps.getUserEvents.outputs.userEvents}}
           userName=null
           userEmail=null
           i=0
