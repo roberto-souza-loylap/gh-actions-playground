@@ -29,7 +29,7 @@ jobs:
       - id: getUserNameAndEmail
         name: Get user config name and email
         run: |
-          echo "${{steps.getUserEvents.outputs.userEvents}}" | jq '.'
+          cat ./user-events.json | jq '.'
           userEvents=${{fromJson(steps.getUserEvents.outputs.userEvents)}}
           userName=null
           userEmail=null
