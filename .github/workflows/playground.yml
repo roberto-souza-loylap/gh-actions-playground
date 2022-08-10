@@ -25,7 +25,6 @@ jobs:
         run: |
           # echo "::set-output name=userEvents::"$(jq '.' ./user-events.json)
           readarray -t varArr < <(jq --compact-output '.[].payload.commits[]?.author' ./user-events.json)
-          echo ${varArr}
           echo "::set-output name=userEvents::$varArr"
 
       - id: getUserNameAndEmail
@@ -33,15 +32,15 @@ jobs:
         run: |
           userEvents=${{steps.getUserEvents.outputs.userEvents}}
           echo "$userEvents"
-          # userName=null
-          # userEmail=null
-          # echo "$userEvents[0]"
-          # echo $userEvents[0]
-          # echo ${userEvents[0]}
-          # i=0
-          # echo "$userEvents[$i]"
-          # while [$userEvents[$i]]
-          # do
-          #   echo $userEvents[$i].payload.commits.author
-          #   $i = $i + 1
-          # done
+          userName=null
+          userEmail=null
+          echo "$userEvents[0]"
+          echo $userEvents[0]
+          echo ${userEvents[0]}
+          i=0
+          echo "$userEvents[$i]"
+          while [$userEvents[$i]]
+          do
+            echo $userEvents[$i].payload.commits.author
+            $i = $i + 1
+          done
