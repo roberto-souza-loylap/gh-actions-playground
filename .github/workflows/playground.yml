@@ -24,7 +24,7 @@ jobs:
         name: Parse user's events
         run: |
           # echo "::set-output name=userEvents::"$(jq '.' ./user-events.json)
-          readarray -t varArr < <(jq -s '[.[].payload.commits[]?.author]' ./user-events.json)
+          readarray -t varArr < <(jq -s '.[].payload.commits[]?.author' ./user-events.json)
           echo "::set-output name=userEvents::$varArr"
 
       - id: getUserNameAndEmail
