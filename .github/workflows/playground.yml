@@ -21,24 +21,25 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: getUserEvents
+      - id: parseUserEvents
         name: Parse user's events
         run: |
-          hasEamilFound=false
+          hasEmailFound=false
           while read line
           do
             email=`jq '.email' <<< "${line}"`
-            echo $email
+            # if found a bot email, continue searching
             if [[ $email != *"users.noreply.github.com"* ]]
             then
               name=`jq '.name' <<< "${line}"`
               echo "::set-output name=userEmail::$email"
               echo "::set-output name=userName::$name"
-              hasEamilFound=true
+              $hasEmailFound=true
               break
             fi
           done < ./user-events.json
-          if [[ !$hasEamilFound ]]
+          # if email not found on user's public events API page, use a fallback
+          if [[ !$hasEmailFound ]]
           then
               echo "::set-output name=userEmail::bot.cicd@loylap.com"
               echo "::set-output name=userName::Bot CI/CD"
@@ -46,5 +47,5 @@ jobs:
       - id: getUserNameAndEmail
         name: Get user config name and email
         run: |
-          echo "email: "${{steps.getUserEvents.outputs.userEmail}}
-          echo "name: "${{steps.getUserEvents.outputs.userName}}
+          echo "email: "${{steps.parseUserEvents.outputs.userEmail}}
+          echo "name: "${{steps.parseUserEvents.outputs.userName}}
