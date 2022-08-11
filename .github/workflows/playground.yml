@@ -24,7 +24,7 @@ jobs:
       - id: parseUserEvents
         name: Parse user's events
         run: |
-          hasEmailFound=false
+          hasEmailFound=0
           while read line
           do
             email=`jq '.email' <<< "${line}"`
@@ -34,7 +34,7 @@ jobs:
               name=`jq '.name' <<< "${line}"`
               echo "::set-output name=userEmail::$email"
               echo "::set-output name=userName::$name"
-              $hasEmailFound=true
+              hasEmailFound=1
               break
             fi
           done < ./user-events.json
