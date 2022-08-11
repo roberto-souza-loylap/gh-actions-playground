@@ -24,37 +24,27 @@ jobs:
       - id: getUserEvents
         name: Parse user's events
         run: |
-          IDTOKEN=$(curl -H "Authorization: bearer $" $ -H "Accept: application/json; api-version=2.0" -H "Content-Type: application/json" -d "{}" | jq -r '.value')
-          echo $IDTOKEN
-          jwtd() {
-              if [[ -x $(command -v jq) ]]; then
-                  jq -R 'split(".") | .[0],.[1] | @base64d | fromjson' <<< "${1}"
-                  echo "Signature: $(echo "${1}" | awk -F'.' '{print $3}')"
-              fi
-          }
-          jwtd $IDTOKEN
-          echo "::set-output name=idToken::${IDTOKEN}"
-
-          # while read line
-          # do
-          #   jq -R '. | fromjson' <<< "${line}"
-          #   echo "${line}" | awk -F'.' '{print $email}'
-          #   # echo ${line} | jq -R '. | fromjson' >> objLine
-          #   # echo ${objLine.email}
-          #   # echo ${objLine.name}
-          # done < ./user-events.json
-          # echo "::set-output name=userEvents::$varArr"
-
+          hasEamilFound=false
+          while read line
+          do
+            email=`jq -R '.email' <<< "${line}"`
+            echo $email
+            if [[ $email != *"users.noreply.github.com"* ]]
+            then
+              name=`jq -R '.name' <<< "${line}"`
+              echo "::set-output name=userEmail::$email"
+              echo "::set-output name=userName::$name"
+              hasEamilFound=true
+              break
+            fi
+          done < ./user-events.json
+          if [[ !$hasEamilFound ]]
+          then
+              echo "::set-output name=userEmail::bot.cicd@loylap.com"
+              echo "::set-output name=userName::Bot CI/CD"
+          fi
       - id: getUserNameAndEmail
         name: Get user config name and email
         run: |
-          userEvents=${{steps.getUserEvents.outputs.userEvents}}
-          echo "$userEvents"
-          userName=null
-          userEmail=null
-          i=0
-          while [$userEvents[$i]]
-          do
-            echo $userEvents[$i].payload.commits.author
-            $i = $i + 1
-          done
+          echo "email: "${{steps.getUserEvents.outputs.email}}
+          echo "name: "${{steps.getUserEvents.outputs.name}}
