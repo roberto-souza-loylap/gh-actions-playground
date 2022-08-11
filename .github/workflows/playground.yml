@@ -8,7 +8,8 @@ defaults:
     shell: bash
 
 jobs:
-  show-gh-objects:
+  show-gh-object:
+    name: Show gh object
     runs-on: ubuntu-latest
     steps:
       - name: showGithubContextObject
@@ -16,6 +17,7 @@ jobs:
           echo '${{toJson(github)}}'
 
   get-user-data-from-gh-events:
+    name: Get user data from gh public events API
     if: "!contains(github.event.head_commit.author.email, '@')"
     runs-on: ubuntu-latest
     steps:
@@ -52,13 +54,9 @@ jobs:
             echo "::set-output name=userEmail::bot.cicd@loylap.com"
             echo "::set-output name=userName::Bot CI/CD"
           fi
-      - id: getUserNameAndEmail
-        name: Get user config name and email
-        run: |
-          echo "email: "${{steps.parseUserEvents.outputs.userEmail}}
-          echo "name: "${{steps.parseUserEvents.outputs.userName}}
 
   get-user-data:
+    name: Get user data to config
     runs-on: ubuntu-latest
     steps:
       - id: getUserNameAndEmail
@@ -71,6 +69,6 @@ jobs:
             echo "name: ${{github.event.head_commit.author.email}}"
           else
             echo "##[log] User data got from public events"
-            echo "email: ${{steps.parseUserEvents.outputs.userEmail}}"
-            echo "name: ${{steps.parseUserEvents.outputs.userName}}"
+            echo "email: ${{jobs.get-user-data-from-gh-events.steps.parseUserEvents.outputs.userEmail}}"
+            echo "name: ${{jobs.get-user-data-from-gh-events.steps.parseUserEvents.outputs.userName}}"
           fi
