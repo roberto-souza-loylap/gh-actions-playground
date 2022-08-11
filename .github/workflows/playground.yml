@@ -17,7 +17,7 @@ jobs:
         name: Fetch user's public events
         run: |
           eventesResponse=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
-          jq --compact-output '.[].payload.commits[]?.author' ${eventesResponse} >> ./user-events.json
+          echo ${eventesResponse} | jq --compact-output '.[].payload.commits[]?.author' >> ./user-events.json
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
