@@ -40,7 +40,7 @@ jobs:
             fi
           done < ./user-events.json
           # if email not found on user's public events API page, use a fallback
-          if [[ !"$hasEmailFound" ]]
+          if [[ $hasEmailFound == false ]]
           then
             echo "::debug::Email not found, set output with fallback"
             echo "::set-output name=userEmail::bot.cicd@loylap.com"
