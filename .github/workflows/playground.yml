@@ -46,5 +46,5 @@ jobs:
       - id: getUserNameAndEmail
         name: Get user config name and email
         run: |
-          echo "email: "${{steps.getUserEvents.outputs.email}}
-          echo "name: "${{steps.getUserEvents.outputs.name}}
+          echo "email: "${{steps.getUserEvents.outputs.userEmail}}
+          echo "name: "${{steps.getUserEvents.outputs.userName}}
