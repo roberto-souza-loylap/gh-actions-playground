@@ -16,14 +16,15 @@ jobs:
       - id: fetchUserEvents
         name: Fetch user's public events
         run: |
-          gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public >> ./user-events.json
+          eventesResponse=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
+          jq --compact-output '.[].payload.commits[]?.author' ${eventesResponse} >> ./user-events.json
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - id: getUserEvents
         name: Parse user's events
         run: |
-          readarray -t varArr < <(jq -s --compact-output '.' ./user-events.json)
+          readarray -t varArr < <(jq --compact-output '.' ./user-events.json)
           echo ${varArr}
           echo "::set-output name=userEvents::$varArr"
 
