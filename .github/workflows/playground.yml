@@ -27,11 +27,11 @@ jobs:
           hasEamilFound=false
           while read line
           do
-            email=`jq -R '.email' <<< "${line}"`
+            email=`jq '.email' <<< "${line}"`
             echo $email
             if [[ $email != *"users.noreply.github.com"* ]]
             then
-              name=`jq -R '.name' <<< "${line}"`
+              name=`jq '.name' <<< "${line}"`
               echo "::set-output name=userEmail::$email"
               echo "::set-output name=userName::$name"
               hasEamilFound=true
