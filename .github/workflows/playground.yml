@@ -67,10 +67,10 @@ jobs:
           if ${{contains(github.event.head_commit.author.email, '@')}}
           then
             echo "##[log] User data got from head commit"
-            echo "email: "${{github.event.head_commit.author.name}}
-            echo "name: "${{github.event.head_commit.author.email}}
+            echo "email: ${{github.event.head_commit.author.name}}"
+            echo "name: ${{github.event.head_commit.author.email}}"
           else
             echo "##[log] User data got from public events"
-            echo "email: "${{job.get-user-data-from-gh-events.steps.parseUserEvents.outputs.userEmail}}
-            echo "name: "${{job.get-user-data-from-gh-events.steps.parseUserEvents.outputs.userName}}
+            echo "email: ${{steps.parseUserEvents.outputs.userEmail}}"
+            echo "name: ${{steps.parseUserEvents.outputs.userName}}"
           fi
