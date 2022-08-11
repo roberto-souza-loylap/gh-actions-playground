@@ -24,10 +24,10 @@ jobs:
       - id: getUserEvents
         name: Parse user's events
         run: |
-          while readarray -t varArr
+          while read line
           do
-            echo ${varArr}
-          done < <(jq --compact-output '.' ./user-events.json)
+            echo ${line}
+          done < ./user-events.json
           echo "::set-output name=userEvents::$varArr"
 
       - id: getUserNameAndEmail
