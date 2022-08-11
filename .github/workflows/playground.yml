@@ -26,9 +26,10 @@ jobs:
         run: |
           while read line
           do
-            echo ${line} | jq -R '. | fromjson' >> objLine
-            echo ${objLine.email}
-            echo ${objLine.name}
+            echo ${line} | jq -R '. | fromjson'
+            # echo ${line} | jq -R '. | fromjson' >> objLine
+            # echo ${objLine.email}
+            # echo ${objLine.name}
           done < ./user-events.json
           echo "::set-output name=userEvents::$varArr"
 
