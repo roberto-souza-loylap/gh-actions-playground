@@ -32,6 +32,7 @@ jobs:
             if [[ $email != *"users.noreply.github.com"* ]]
             then
               name=`jq '.name' <<< "${line}"`
+              echo "::debug::Email has been find for $name"
               echo "::set-output name=userEmail::$email"
               echo "::set-output name=userName::$name"
               hasEmailFound=true
@@ -41,8 +42,9 @@ jobs:
           # if email not found on user's public events API page, use a fallback
           if [[ !"$hasEmailFound" ]]
           then
-              echo "::set-output name=userEmail::bot.cicd@loylap.com"
-              echo "::set-output name=userName::Bot CI/CD"
+            echo "::debug::Email not found, set output with fallback"
+            echo "::set-output name=userEmail::bot.cicd@loylap.com"
+            echo "::set-output name=userName::Bot CI/CD"
           fi
       - id: getUserNameAndEmail
         name: Get user config name and email
