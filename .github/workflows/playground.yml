@@ -27,6 +27,7 @@ jobs:
           while read line
           do
             echo ${line} | jq -R '. | fromjson'
+            echo "${line}" | awk -F'.' '{print $email}'
             # echo ${line} | jq -R '. | fromjson' >> objLine
             # echo ${objLine.email}
             # echo ${objLine.name}
