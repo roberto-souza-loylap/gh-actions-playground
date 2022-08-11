@@ -20,6 +20,9 @@ jobs:
     name: Get user data from gh public events API
     if: "!contains(github.event.head_commit.author.email, '@')"
     runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.parseUserEvents.outputs.userName }}
+      email: ${{ steps.parseUserEvents.outputs.userEmail }}
     steps:
       - id: fetchUserEvents
         name: Fetch user's public events
@@ -58,6 +61,7 @@ jobs:
   get-user-data:
     name: Get user data to config
     runs-on: ubuntu-latest
+    needs: get-user-data-from-gh-events
     steps:
       - id: getUserNameAndEmail
         name: Get user config name and email
@@ -69,6 +73,6 @@ jobs:
             echo "name: ${{github.event.head_commit.author.email}}"
           else
             echo "##[log] User data got from public events"
-            echo "email: ${{jobs.get-user-data-from-gh-events.steps.parseUserEvents.outputs.userEmail}}"
-            echo "name: ${{jobs.get-user-data-from-gh-events.steps.parseUserEvents.outputs.userName}}"
+            echo "email: ${{needs.get-user-data-from-gh-events.steps.outputs.email}}"
+            echo "name: ${{needs.get-user-data-from-gh-events.steps.outputs.name}}"
           fi
