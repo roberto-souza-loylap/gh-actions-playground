@@ -31,6 +31,9 @@ jobs:
         name: Show current APP Version
         run: |
           echo "Current Version: ${{steps.bumpVersion.outputs.current-version}}"
+      - id: install
+        name: Install packages
+        run: npm ci
 
 
   get-user-data:
