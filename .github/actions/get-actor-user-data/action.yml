@@ -1,0 +1,69 @@
+name: 'Get actor user data'
+description: 'Get actor user name and email'
+inputs:
+  GITHUB_TOKEN:
+    description: Used to fetch gh user public events API
+    required: true
+    default: ${{ github.token }}
+outputs:
+  email:
+    description: 'Actor user email.'
+    value: ${{ steps.getUserNameAndEmail.outputs.email }}
+  name:
+    description: 'Actor user name'
+    value: ${{ steps.getUserNameAndEmail.outputs.name }}
+runs:
+  using: "composite"
+  steps:
+    - id: fetchUserEvents
+      name: Fetch user's public events
+      shell: bash
+      if: "!contains(github.event.head_commit.author.email, '@')"
+      run: |
+        eventesResponse=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
+        echo ${eventesResponse} | jq --compact-output '.[].payload.commits[]?.author' >> ./user-events.json
+      env:
+        GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    - id: parseUserEvents
+      name: Parse user's events
+      shell: bash
+      if: "!contains(github.event.head_commit.author.email, '@')"
+      run: |
+        hasEmailFound=false
+        while read line
+        do
+          email=`jq '.email' <<< "${line}"`
+          # if found a bot email, continue searching
+          if [[ $email != *"users.noreply.github.com"* ]]
+          then
+            name=`jq '.name' <<< "${line}"`
+            echo "##[log] Email has been find for $name"
+            echo "::set-output name=userEmail::$email"
+            echo "::set-output name=userName::$name"
+            hasEmailFound=true
+            break
+          fi
+        done < ./user-events.json
+        # if email not found on user's public events API page, use a fallback
+        if [[ $hasEmailFound == false ]]
+        then
+          echo "##[log] Email not found, set output with fallback"
+          echo "::set-output name=userEmail::bot.cicd@loylap.com"
+          echo "::set-output name=userName::Bot CI/CD"
+        fi
+
+    - id: getUserNameAndEmail
+      name: Get user config name and email
+      shell: bash
+      run: |
+        if ${{contains(github.event.head_commit.author.email, '@')}}
+        then
+          echo "##[log] User data got from head commit"
+          echo "::set-output name=email::${{github.event.head_commit.author.name}}"
+          echo "::set-output name=name::${{github.event.head_commit.author.email}}"
+        else
+          echo "##[log] User data got from public events"
+          echo "::set-output name=email::${{steps.parseUserEvents.outputs.email}}"
+          echo "::set-output name=name::${{steps.parseUserEvents.outputs.name}}"
+        fi

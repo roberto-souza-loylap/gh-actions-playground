@@ -8,6 +8,12 @@ defaults:
     shell: bash
 
 jobs:
+  setup:
+    name: Setup enviroment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
   show-gh-object:
     name: Show gh object
     runs-on: ubuntu-latest
