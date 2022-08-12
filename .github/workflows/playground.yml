@@ -27,6 +27,10 @@ jobs:
       - id: bumpVersion
         name: Bump APP Version
         uses: ./.github/actions/npm-bump-version
+      - id: showCurrentAppVersion
+        name: Show current APP Version
+        run: |
+          echo "Current Version: ${{steps.bumpVersion.outputs.current-version}}"
 
 
   get-user-data:
