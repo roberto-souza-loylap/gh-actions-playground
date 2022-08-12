@@ -11,6 +11,6 @@ runs:
       name: NPM Bump Version
       shell: bash
       run: |
-        newVersion=${`npm version patch`#v}
+        newVersion=`npm version patch`
         echo "The version has been successfully increased to $newVersion"
-        echo "::set-output name=currentVersion::${newVersion}"
+        echo "::set-output name=currentVersion::${newVersion#v}"
