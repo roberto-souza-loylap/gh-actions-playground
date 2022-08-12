@@ -3,6 +3,11 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      commit-message-fallback:
+        description: 'Message used to bump version commit message'
+        required: true
+        type: string
 defaults:
   run:
     shell: bash
