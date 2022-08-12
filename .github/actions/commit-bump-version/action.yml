@@ -43,6 +43,7 @@ runs:
           echo "##[log] Use fallback commit message"
           commitMessage=("${commitMessage}" "${{inputs.commit-message-fallback}}")
         fi
+        echo "commit message: ${commitMessage}"
         git config --global user.name '${{ inputs.gh-user-name }}'
         git config --global user.email '${{ inputs.gh-user-email }}'
         git add package.json package-lock.json
