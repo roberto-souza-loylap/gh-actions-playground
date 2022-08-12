@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       commit-message-fallback:
-        description: 'Message used to bump version commit message'
+        description: 'Commit message to bump version'
         required: true
         type: string
 defaults:
@@ -55,3 +55,4 @@ jobs:
           gh-user-name: ${{steps.getUserNameAndEmail.outputs.name}}
           gh-user-email: ${{steps.getUserNameAndEmail.outputs.email}}
           commit-message-prefix: "RC App: "
+          commit-message-fallback: ${{inputs.commit-message-fallback}}

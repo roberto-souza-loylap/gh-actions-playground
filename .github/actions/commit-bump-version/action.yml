@@ -9,8 +9,14 @@ inputs:
     required: true
   commit-message-prefix:
     description: 'Text for commit message prefix. Fallback is RC:'
-    required: true
-    default: 'RC: '
+    required: false
+  commit-message-fallback:
+    description: 'Message used to bump version commit'
+    required: false
+    default: No commit message
+  skip-ci:
+    description: 'Flag to skip-ci after push'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -18,9 +24,19 @@ runs:
       name: Commit Bumped Version
       shell: bash
       run: |
-          git config --global user.name '${{ inputs.gh-user-name }}'
-          git config --global user.email '${{ inputs.gh-user-email }}'
-          git add package.json package-lock.json
-          git commit -m '${{inputs.commit-message-prefix}}${{ github.event.head_commit.message }}'
-          git push
-          echo "The RC version has been successfully committed"
+        commitMessage=${{ github.event.head_commit.message }} || ${{ inputs.commit-message-fallback }}
+        if [ "${{inputs.commit-message-prefix}}" ]
+        then
+          commitMessage="${{inputs.commit-message-prefix}}$commitMessage"
+        fi
+        if [ "${{inputs.skip-ci}}" ]
+        then
+          commitMessage="[no-ci] $commitMessage"
+        fi
+        git config --global user.name '${{ inputs.gh-user-name }}'
+        git config --global user.email '${{ inputs.gh-user-email }}'
+        git add package.json package-lock.json
+        git commit -m '${commitMessage}'
+        git pull
+        git push
+        echo "The RC version has been successfully committed"
