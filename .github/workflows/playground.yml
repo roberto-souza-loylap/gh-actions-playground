@@ -23,24 +23,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - id: bumpVersion
-        name: Bump APP Version
-        uses: ./.github/actions/npm-bump-version
-      - id: showCurrentAppVersion
-        name: Show current APP Version
-        run: |
-          echo "Current Version: ${{steps.bumpVersion.outputs.current-version}}"
-      - id: install
-        name: Install packages
-        run: npm ci
-
-
-  get-user-data:
-    name: Get user data to config
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
       - id: getUserNameAndEmail
         name: Get user config name and email
         uses: ./.github/actions/get-actor-user-data
@@ -51,3 +33,20 @@ jobs:
         run: |
           echo "Name: ${{steps.getUserNameAndEmail.outputs.name}}"
           echo "Email: ${{steps.getUserNameAndEmail.outputs.email}}"
+      - id: bumpVersion
+        name: Bump APP Version
+        uses: ./.github/actions/npm-bump-version
+      - id: showCurrentAppVersion
+        name: Show current APP Version
+        run: |
+          echo "Current Version: ${{steps.bumpVersion.outputs.current-version}}"
+      - id: install
+        name: Install packages
+        run: echo "npm ci"
+      - id: postBumpVersion
+        name: Commit Bumped APP Version
+        uses: ./.github/actions/commit-bump-version
+        with:
+          gh-user-name: ${{steps.getUserNameAndEmail.outputs.name}}
+          gh-user-email: ${{steps.getUserNameAndEmail.outputs.email}}
+          commit-message-prefix: "RC App: "
