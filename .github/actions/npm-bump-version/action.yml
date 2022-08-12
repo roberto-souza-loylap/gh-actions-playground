@@ -13,5 +13,5 @@ runs:
       run: |
         npm config set git-tag-version false
         newVersion=`npm version patch`
-        echo "The version has been successfully increased to $newVersion"
+        echo "##[log] The version has been successfully increased to $newVersion"
         echo "::set-output name=currentVersion::${newVersion#v}"
