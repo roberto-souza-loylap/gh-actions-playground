@@ -64,6 +64,6 @@ runs:
           echo "::set-output name=name::${{github.event.head_commit.author.email}}"
         else
           echo "##[log] User data got from public events"
-          echo "::set-output name=email::${{steps.parseUserEvents.outputs.email}}"
-          echo "::set-output name=name::${{steps.parseUserEvents.outputs.name}}"
+          echo "::set-output name=email::${{steps.parseUserEvents.outputs.userEmail}}"
+          echo "::set-output name=name::${{steps.parseUserEvents.outputs.userName}}"
         fi
