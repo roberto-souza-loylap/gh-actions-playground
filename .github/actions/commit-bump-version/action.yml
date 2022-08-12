@@ -18,9 +18,9 @@ runs:
       name: Commit Bumped Version
       shell: bash
       run: |
-          git config --global user.name '${{ input.gh-user-name }}'
-          git config --global user.email '${{ input.gh-user-email }}'
+          git config --global user.name '${{ inputs.gh-user-name }}'
+          git config --global user.email '${{ inputs.gh-user-email }}'
           git add package.json package-lock.json
-          git commit -m '${{input.commit-message-prefix}}${{ github.event.head_commit.message }}'
+          git commit -m '${{inputs.commit-message-prefix}}${{ github.event.head_commit.message }}'
           git push
           echo "The RC version has been successfully committed"
