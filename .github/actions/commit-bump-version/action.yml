@@ -38,10 +38,10 @@ runs:
         if [ "${{github.event.head_commit.message}}" != "" ]
         then
           echo "##[log] Use head commit message"
-          commitMessage="${commitMessage}" "${{github.event.head_commit.message}}"
+          commitMessage="${commitMessage}${{github.event.head_commit.message}}"
         else
           echo "##[log] Use fallback commit message"
-          commitMessage="${commitMessage}" "${{inputs.commit-message-fallback}}"
+          commitMessage="${commitMessage}${{inputs.commit-message-fallback}}"
         fi
         echo "commit message: ${commitMessage}"
         git config --global user.name '${{ inputs.gh-user-name }}'
