@@ -11,6 +11,7 @@ runs:
       name: NPM Bump Version
       shell: bash
       run: |
+        npm config set commit-hooks false
         newVersion=`npm version patch`
         echo "The version has been successfully increased to $newVersion"
         echo "::set-output name=currentVersion::${newVersion#v}"
