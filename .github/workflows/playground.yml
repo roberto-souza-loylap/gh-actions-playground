@@ -16,63 +16,17 @@ jobs:
         run: |
           echo '${{toJson(github)}}'
 
-  get-user-data-from-gh-events:
-    name: Get user data from gh public events API
-    if: "!contains(github.event.head_commit.author.email, '@')"
-    runs-on: ubuntu-latest
-    outputs:
-      name: ${{ steps.parseUserEvents.outputs.userName }}
-      email: ${{ steps.parseUserEvents.outputs.userEmail }}
-    steps:
-      - id: fetchUserEvents
-        name: Fetch user's public events
-        run: |
-          eventesResponse=`gh api -H "Accept: application/vnd.github+json" /users/${{github.actor}}/events/public`
-          echo ${eventesResponse} | jq --compact-output '.[].payload.commits[]?.author' >> ./user-events.json
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - id: parseUserEvents
-        name: Parse user's events
-        run: |
-          hasEmailFound=false
-          while read line
-          do
-            email=`jq '.email' <<< "${line}"`
-            # if found a bot email, continue searching
-            if [[ $email != *"users.noreply.github.com"* ]]
-            then
-              name=`jq '.name' <<< "${line}"`
-              echo "##[log] Email has been find for $name"
-              echo "::set-output name=userEmail::$email"
-              echo "::set-output name=userName::$name"
-              hasEmailFound=true
-              break
-            fi
-          done < ./user-events.json
-          # if email not found on user's public events API page, use a fallback
-          if [[ $hasEmailFound == false ]]
-          then
-            echo "##[log] Email not found, set output with fallback"
-            echo "::set-output name=userEmail::bot.cicd@loylap.com"
-            echo "::set-output name=userName::Bot CI/CD"
-          fi
-
   get-user-data:
     name: Get user data to config
     runs-on: ubuntu-latest
-    needs: get-user-data-from-gh-events
     steps:
       - id: getUserNameAndEmail
         name: Get user config name and email
+        uses: ./.github/actions/get-actor-user-data
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: show-actor-user-data
+        name: Show actor user data
         run: |
-          if ${{contains(github.event.head_commit.author.email, '@')}}
-          then
-            echo "##[log] User data got from head commit"
-            echo "email: ${{github.event.head_commit.author.name}}"
-            echo "name: ${{github.event.head_commit.author.email}}"
-          else
-            echo "##[log] User data got from public events"
-            echo "email: ${{needs.get-user-data-from-gh-events.steps.outputs.email}}"
-            echo "name: ${{needs.get-user-data-from-gh-events.steps.outputs.name}}"
-          fi
+          echo "Name: ${{steps.getUserNameAndEmail.outputs.name}}"
+          echo "Email: ${{steps.getUserNameAndEmail.outputs.email}}"
