@@ -1,0 +1,16 @@
+name: 'npm Bump Version'
+description: 'Increase npm version'
+outputs:
+  current-version:
+    description: 'Current new version after Bump Version'
+    value: ${{ steps.npmBumpVersion.outputs.currentVersion }}
+runs:
+  using: "composite"
+  steps:
+    - id: npmBumpVersion
+      name: NPM Bump Version
+      shell: bash
+      run: |
+        newVersion=${`npm version patch`:1}
+        echo "The version has been successfully increased to $newVersion"
+        echo "::set-output name=currentVersion::${newVersion}"

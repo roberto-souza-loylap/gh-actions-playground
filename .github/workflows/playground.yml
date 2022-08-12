@@ -8,13 +8,26 @@ defaults:
     shell: bash
 
 jobs:
-  show-gh-object:
-    name: Show gh object
+  build:
+    name: Build App
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.22.3]
     steps:
-      - name: showGithubContextObject
-        run: |
-          echo '${{toJson(github)}}'
+      - id: checkout
+        name: Checkout current repository
+        uses: actions/checkout@v3
+      - id: setupEnv
+        name: Setup node environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - id: bumpVersion
+        name: Bump APP Version
+        uses: ./.github/actions/npm-bump-version
+
 
   get-user-data:
     name: Get user data to config
