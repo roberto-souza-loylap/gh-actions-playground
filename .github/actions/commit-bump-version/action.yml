@@ -33,15 +33,15 @@ runs:
         if [ "${{inputs.commit-message-prefix}}" != "" ]
         then
           echo "##[log] Add prefix text into commit message"
-          commitMessage=$commitMessage "${{inputs.commit-message-prefix}}"
+          commitMessage=("${commitMessage}" "${{inputs.commit-message-prefix}}")
         fi
         if [ "${{github.event.head_commit.message}}" != "" ]
         then
           echo "##[log] Use head commit message"
-          commitMessage=$commitMessage "${{github.event.head_commit.message}}"
+          commitMessage=("${commitMessage}" "${{github.event.head_commit.message}}")
         else
           echo "##[log] Use fallback commit message"
-          commitMessage=$commitMessage "${{inputs.commit-message-fallback}}"
+          commitMessage=("${commitMessage}" "${{inputs.commit-message-fallback}}")
         fi
         git config --global user.name '${{ inputs.gh-user-name }}'
         git config --global user.email '${{ inputs.gh-user-email }}'
