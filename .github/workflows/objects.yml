@@ -24,4 +24,4 @@ jobs:
       - id: show-last-commit
         name: Show last commit
         run: |
-          echo $(git log -1)
+          echo $(git log -1 --format='%s')
