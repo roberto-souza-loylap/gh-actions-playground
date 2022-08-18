@@ -1,0 +1,16 @@
+name: Show Object
+on:
+  workflow_dispatch:
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  show-gh-object:
+    name: Show GH object
+    runs-on: ubuntu-latest
+    steps:
+      - id: show-actor-user-data
+        name: Show actor user data
+        run: |
+          echo ${{toJson(github)}}
