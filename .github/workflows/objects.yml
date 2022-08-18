@@ -13,4 +13,4 @@ jobs:
       - id: show-actor-user-data
         name: Show actor user data
         run: |
-          echo ${{toJson(github)}}
+          echo "${{github}}"
