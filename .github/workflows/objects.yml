@@ -6,11 +6,22 @@ defaults:
     shell: bash
 
 jobs:
-  show-gh-object:
+  gh-object:
     name: Show GH object
     runs-on: ubuntu-latest
     steps:
-      - id: show-actor-user-data
-        name: Show actor user data
+      - id: show-gh-object
+        name: Show github object
         run: |
           echo "${{github}}"
+  commit-message:
+    name: Show the last commit message
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout current repository
+        uses: actions/checkout@v3
+      - id: show-last-commit
+        name: Show last commit
+        run: |
+          echo $(git log -1)
